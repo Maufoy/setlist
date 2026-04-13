@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+  <title>SET LIST</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@200;300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "surface-dim": "#dadada",
+                    "primary-container": "#ffde03",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#72641c",
+                    "surface-container-low": "#f3f3f4",
+                    "primary": "#6d5e00",
+                    "inverse-primary": "#e3c600",
+                    "inverse-surface": "#2f3131",
+                    "primary-fixed-dim": "#e3c600",
+                    "on-tertiary-fixed-variant": "#004f52",
+                    "secondary": "#6b5e17",
+                    "surface-bright": "#f9f9f9",
+                    "on-secondary-fixed": "#211b00",
+                    "secondary-fixed": "#f6e38d",
+                    "on-primary-fixed-variant": "#524600",
+                    "on-background": "#1a1c1c",
+                    "secondary-fixed-dim": "#d9c774",
+                    "inverse-on-surface": "#f0f1f1",
+                    "on-tertiary-fixed": "#002021",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "outline": "#7d775f",
+                    "surface": "#f9f9f9",
+                    "tertiary-container": "#1cf6ff",
+                    "on-primary-fixed": "#211b00",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "tertiary": "#00696d",
+                    "surface-container": "#eeeeee",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "primary-fixed": "#ffe24b",
+                    "tertiary-fixed": "#5df7ff",
+                    "background": "#f9f9f9",
+                    "on-secondary": "#ffffff",
+                    "on-primary-container": "#716200",
+                    "on-surface": "#1a1c1c",
+                    "on-tertiary-container": "#006d71",
+                    "secondary-container": "#f6e38d",
+                    "on-secondary-fixed-variant": "#524600",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-variant": "#e2e2e2",
+                    "tertiary-fixed-dim": "#00dce4",
+                    "surface-tint": "#6d5e00",
+                    "on-surface-variant": "#4c4732",
+                    "outline-variant": "#cfc6ab"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+                },
+                "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Manrope"],
+                    "label": ["Inter"]
+                }
+            },
+        },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e2e2; border-radius: 10px; }
+    .glint-effect:active { background: linear-gradient(90deg, transparent, rgba(255, 222, 3, 0.2), transparent); background-size: 200% 100%; }
+    .glint-effect:hover { position: relative; overflow: hidden; }
+    .glint-effect:hover::after { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255, 222, 3, 0.1), transparent); transform: rotate(45deg); transition: all 0.6s ease; }
+    body { min-height: max(884px, 100dvh); background-color: #f9f9f9; }
+    .view { display: none; }
+    .view.active { display: block; animation: fadeIn 0.18s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .toast { position: fixed; bottom: 6rem; right: 2rem; background: var(--text, #1a1c1c); color: var(--bg, #f9f9f9); border-radius: 8px; padding: 0.7rem 1.25rem; font-size: 0.9rem; font-family: 'Inter'; letter-spacing: 1.5px; font-weight: 700; z-index: 1000; transform: translateY(100px); opacity: 0; transition: all 0.25s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { background: #ba1a1a; color: #fff; }
+    .escondido { display: none !important; }
+    
+    /* modal stuff */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-card { background: #fff; border-radius: 1rem; width: 90%; max-width: 500px; padding: 2rem; transform: scale(0.95); transition: transform 0.2s; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    .modal-overlay.active .modal-card { transform: scale(1); }
+  </style>
+  <script>
+    // Bloqueia pinch-to-zoom no iOS Safari (ignora user-scalable desde iOS 10)
+    document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+    document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
+    document.addEventListener('gestureend', function(e) { e.preventDefault(); });
+    document.addEventListener('touchmove', function(e) {
+      if (e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+  </script>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary-container/30">
+
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.04)] flex items-center justify-between px-6 h-16 md:h-20 w-full">
+  <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-400 text-2xl md:text-3xl">aperture</span>
+    <h1 class="font-['Space_Grotesk'] tracking-tight font-bold text-xl md:text-2xl uppercase text-stone-900 dark:text-white">SET LIST</h1>
+  </div>
+  <div class="flex items-center gap-4">
+    <div class="hidden md:flex gap-6 font-headline tracking-tighter uppercase font-bold">
+      <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="novo">NOVO REGISTRO</button>
+      <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="bloqueados">BLOQUEADOS</button>
+      <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="historico">HISTORICO</button>
+    </div>
+    <div id="avatar-btn" class="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 flex items-center justify-center overflow-hidden border-2 border-primary-container cursor-pointer" style="border-radius: 50%;">
+      <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw"/>
+    </div>
+  </div>
+</header>
+
+<main class="pt-24 pb-32 px-4 w-full h-full">
+
+  <!-- ── VIEW: NOVO REGISTRO ── -->
+  <section id="view-novo" class="view active max-w-4xl mx-auto">
+    <section class="mb-10 text-center md:text-left">
+      <h2 class="font-headline text-4xl font-extrabold tracking-tighter uppercase mb-2">NOVO REGISTRO DE USO</h2>
+      <p class="font-label text-sm text-outline tracking-wider">CADASTRAR NOVA MOVIMENTAÇÃO DE EQUIPAMENTO</p>
+    </section>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+      <!-- Information Panel -->
+      <div class="md:col-span-12 lg:col-span-4 space-y-6">
+        <!-- Date Picker Field -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+          <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">Data do Registro</label>
+          <div class="flex items-center gap-3 bg-surface-container-low px-4 py-3 rounded-lg border-b-2 border-transparent focus-within:border-primary-container transition-all">
+            <span class="material-symbols-outlined text-primary">calendar_today</span>
+            <input id="data" class="bg-transparent border-none focus:ring-0 font-body font-bold text-lg w-full p-0 outline-none" type="date"/>
+          </div>
+        </div>
+
+        <!-- Status da Pauta -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+          <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">Status da Pauta</label>
+          <div class="flex gap-2" id="status-selector">
+            <button type="button" class="status-btn flex-1 py-2.5 px-1 rounded-xl font-label text-[9px] font-black uppercase tracking-tighter border-2 transition-all outline-none" data-status="pre-producao">
+              PRÉ-PROD.
+            </button>
+            <button type="button" class="status-btn flex-1 py-2.5 px-1 rounded-xl font-label text-[9px] font-black uppercase tracking-tighter border-2 transition-all outline-none" data-status="em-producao">
+              EM PROD.
+            </button>
+            <button type="button" class="status-btn flex-1 py-2.5 px-1 rounded-xl font-label text-[9px] font-black uppercase tracking-tighter border-2 transition-all outline-none" data-status="finalizado">
+              FINALIZADO
+            </button>
+          </div>
+        </div>
+
+        <!-- Client/Production Field -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+          <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">CLIENTE / PRODUCAO</label>
+          <div class="flex items-center gap-3 bg-surface-container-low px-4 py-3 rounded-lg border-b-2 border-transparent focus-within:border-primary-container transition-all">
+            <span class="material-symbols-outlined text-primary">movie</span>
+            <input id="cliente" class="bg-transparent border-none focus:ring-0 font-body font-medium text-lg w-full p-0 outline-none" placeholder="Nome do Cliente ou Projeto" type="text"/>
+          </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+          <div class="flex justify-between items-center">
+            <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">EQUIPE</label>
+            <button id="add-membro" class="bg-primary-container text-on-primary-container text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter hover:opacity-90 active:scale-95 transition-all outline-none">ADICIONAR</button>
+          </div>
+          <div>
+            <input id="membro-input" type="text" class="w-full text-xs font-label p-2 rounded border border-outline-variant outline-none focus:border-primary-container mb-2" placeholder="Nome do membro">
+          </div>
+          <div id="equipe-lista" class="flex flex-wrap gap-2 min-h-[30px]"></div>
+        </div>
+      </div>
+
+      <!-- Equipment Selection Canvas -->
+      <div class="md:col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col">
+        <div class="p-6 bg-surface-container-low/50 backdrop-blur-sm">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <h3 class="font-headline text-xl font-bold uppercase tracking-tight">EQUIPAMENTOS UTILIZADOS</h3>
+            <!-- Search Bar -->
+            <div class="relative flex-1 max-w-md">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+              <input id="busca-equipamento" class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest rounded-full border-none focus:ring-2 focus:ring-primary-container outline-none text-xs font-label font-medium" placeholder="BUSCAR EQUIPAMENTO..." type="text"/>
+            </div>
+          </div>
+        </div>
+
+        <div id="equipamentos-lista" class="p-6 space-y-8 max-h-[600px] overflow-y-auto custom-scrollbar">
+          <p class="text-center text-outline text-sm py-10 font-label">Carregando equipamentos...</p>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="p-6 border-t border-surface-container-low bg-surface-container-low/30 mt-auto flex flex-col sm:flex-row gap-4">
+          <button id="limpar-form" class="flex-1 px-8 py-4 bg-surface-container-highest text-on-surface font-bold rounded-xl uppercase tracking-widest hover:bg-surface-container-high transition-all active:scale-95 text-xs outline-none">
+            LIMPAR
+          </button>
+          <button id="salvar-registro" class="flex-[2] px-8 py-4 bg-primary-container text-on-primary-container font-black rounded-xl uppercase tracking-[0.2em] hover:brightness-105 transition-all active:scale-95 shadow-lg shadow-primary-container/20 text-xs flex items-center justify-center gap-2 outline-none">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">save</span>
+            SALVAR REGISTRO
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VIEW: BLOQUEADOS ── -->
+  <section id="view-bloqueados" class="view max-w-7xl mx-auto">
+    <div class="mb-12 flex justify-between items-end">
+      <div>
+        <span class="font-label text-xs font-bold uppercase tracking-[0.2em] text-primary mb-2 block">Status Geral</span>
+        <h2 class="font-headline text-5xl font-bold tracking-tighter text-on-surface leading-none mb-4">BLOQUEADOS</h2>
+        <button id="btn-novo-bloqueio" class="px-6 py-2 bg-on-surface text-surface rounded-full text-xs font-bold uppercase tracking-widest hover:bg-primary transition-colors flex items-center gap-2 outline-none">
+          <span class="material-symbols-outlined text-sm">add</span> ADICIONAR BLOQUEIO
+        </button>
+      </div>
+    </div>
+
+    <!-- Asymmetric Grid for Categories -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Category: EM REPARO -->
+      <section class="lg:col-span-4 flex flex-col gap-6">
+        <div class="flex items-center justify-between px-2">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-xl">build</span>
+            <h3 class="font-headline font-bold text-xl uppercase tracking-tight">EM REPARO</h3>
+          </div>
+          <span id="count-reparo" class="bg-primary-container/20 text-primary font-bold text-xs px-2 py-1 rounded-full">0</span>
+        </div>
+        <div id="lista-reparo" class="space-y-4">
+          <p class="text-sm font-label text-outline p-4 text-center">Nenhum em reparo.</p>
+        </div>
+      </section>
+
+      <!-- Category: PERDIDOS -->
+      <section class="lg:col-span-4 flex flex-col gap-6">
+        <div class="flex items-center justify-between px-2">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-error text-xl">report</span>
+            <h3 class="font-headline font-bold text-xl uppercase tracking-tight">PERDIDOS</h3>
+          </div>
+          <span id="count-perdidos" class="bg-error-container text-on-error-container font-bold text-xs px-2 py-1 rounded-full">0</span>
+        </div>
+        <div id="lista-perdidos" class="space-y-4">
+          <p class="text-sm font-label text-outline p-4 text-center">Nenhum perdido.</p>
+        </div>
+      </section>
+
+      <!-- Category: ALUGADOS/EMPRESTADOS -->
+      <section class="lg:col-span-4 flex flex-col gap-6">
+        <div class="flex items-center justify-between px-2">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-tertiary text-xl">handshake</span>
+            <h3 class="font-headline font-bold text-xl uppercase tracking-tight">ALUGADOS</h3>
+          </div>
+          <span id="count-alugados" class="bg-tertiary-container/20 text-on-tertiary-container font-bold text-xs px-2 py-1 rounded-full">0</span>
+        </div>
+        <div id="lista-alugados" class="space-y-4">
+          <p class="text-sm font-label text-outline p-4 text-center">Nenhum alugado no momento.</p>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- ── VIEW: HISTORICO ── -->
+  <section id="view-historico" class="view max-w-4xl mx-auto">
+    <!-- Search & Filter Header -->
+    <section class="mb-10">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h2 class="font-headline text-4xl font-bold tracking-tighter text-on-surface uppercase">HISTORICO</h2>
+          <p class="font-label text-sm text-outline tracking-wide mt-1">LOG DE MOVIMENTAÇÃO DE EQUIPAMENTOS</p>
+        </div>
+      </div>
+
+      <!-- Contextual Filters -->
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-surface-container-lowest p-4 flex items-center gap-4 rounded-xl shadow-sm border-b-2 border-primary">
+          <span class="material-symbols-outlined text-outline">search</span>
+          <input id="busca-historico" class="bg-transparent border-none focus:ring-0 w-full font-headline font-bold text-sm tracking-tight placeholder:text-outline/50 uppercase outline-none" placeholder="BUSCAR CLIENTE OU PRODUÇÃO..." type="text"/>
+        </div>
+        <div class="bg-surface-container-lowest p-4 flex items-center gap-4 rounded-xl shadow-sm">
+          <span class="material-symbols-outlined text-outline">calendar_today</span>
+          <input id="filtro-data" class="bg-transparent border-none focus:ring-0 w-full font-headline font-bold text-sm tracking-tight uppercase outline-none text-outline" type="date"/>
+          <button id="limpar-filtros" class="bg-surface-container-low text-on-surface-variant rounded-full p-2 hover:bg-surface-container-highest outline-none"><span class="material-symbols-outlined text-sm">close</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="registros-lista" class="relative space-y-8 min-h-[400px]">
+      <div class="absolute left-6 top-0 bottom-0 w-[2px] bg-surface-container-highest hidden md:block"></div>
+      <p class="text-center font-label text-outline">Carregando registros...</p>
+    </section>
+  </section>
+
+  <!-- ── VIEW: PERFIL ── -->
+  <section id="view-perfil" class="view max-w-2xl mx-auto">
+    <!-- Profile Header Section -->
+    <section class="mb-12 flex flex-col items-center">
+      <div class="relative">
+        <div class="w-40 h-40 overflow-hidden bg-surface-container-low shadow-lg" style="border-radius: 50%; box-shadow: 0 0 0 4px white, 0 8px 32px rgba(0,0,0,0.12);">
+          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw"/>
+        </div>
+        <button class="absolute bottom-2 right-2 bg-primary-container text-on-primary-container p-3 shadow-xl active:scale-90 duration-200 border-4 border-white outline-none" style="border-radius: 50%;">
+          <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">edit</span>
+        </button>
+      </div>
+      <div class="mt-6 text-center">
+        <h2 id="perfil-nome-display" class="font-headline text-3xl font-bold tracking-tight text-on-surface">Carregando...</h2>
+        <p id="perfil-cargo-display" class="font-label text-sm text-zinc-500 tracking-wider uppercase mt-1">Carregando...</p>
+      </div>
+    </section>
+    <!-- Profile Form -->
+    <div class="space-y-8">
+      <div class="space-y-6 bg-surface-container-low/50 p-8 rounded-xl">
+        <div>
+          <label class="block font-headline text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2 px-1">Nome Completo</label>
+          <input id="perfil-nome-input" class="w-full bg-surface-container-lowest border-none border-b-2 border-transparent focus:ring-0 focus:border-primary px-4 py-4 rounded-xl font-body text-lg transition-all outline-none" type="text"/>
+        </div>
+        <div>
+          <label class="block font-headline text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2 px-1">Email Corporativo</label>
+          <input id="perfil-email-input" class="w-full bg-surface-container-lowest border-none border-b-2 border-transparent focus:ring-0 focus:border-primary px-4 py-4 rounded-xl font-body text-lg transition-all outline-none" type="email"/>
+        </div>
+        <div>
+          <button id="btn-save-perfil" class="w-full bg-primary-container text-on-primary-container px-6 py-4 rounded-xl font-headline font-bold uppercase tracking-widest hover:brightness-105 transition-all outline-none">Salvar Alterações</button>
+        </div>
+        <div class="pt-4">
+          <button class="w-full flex items-center justify-between px-6 py-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] outline-none">
+            <div class="flex items-center gap-4">
+              <span class="material-symbols-outlined text-primary">lock_reset</span>
+              <span class="font-body font-bold text-on-surface">Alterar Senha</span>
+            </div>
+            <span class="material-symbols-outlined text-zinc-400">chevron_right</span>
+          </button>
+        </div>
+      </div>
+      <!-- Danger Zone / Logout -->
+      <div class="pt-8 flex flex-col items-center">
+        <button id="btn-logout" class="flex items-center justify-center gap-2 px-10 py-4 bg-zinc-900 text-white rounded-xl font-headline font-bold uppercase tracking-widest hover:bg-zinc-800 transition-colors active:scale-95 duration-200 w-full md:w-auto outline-none">
+          <span class="material-symbols-outlined text-[20px]">logout</span>
+          Sair
+        </button>
+        <p class="mt-6 font-label text-[10px] text-zinc-400 uppercase tracking-widest text-center">
+          Versão do Sistema: 2.4.0-PRIME<br/>
+          ID DA SESSÃO: DX-882-991
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Modal Adicionar Bloqueio -->
+<div id="modal-bloqueio" class="modal-overlay">
+  <div class="modal-card">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="font-headline font-bold text-xl uppercase tracking-tighter">Registrar Bloqueio</h3>
+      <button id="close-modal-bloqueio" class="material-symbols-outlined text-outline hover:text-on-surface">close</button>
+    </div>
+    
+    <div class="space-y-4">
+      <div class="flex flex-col gap-1">
+         <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">TIPO</label>
+         <select id="alug-tipo" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-3 rounded outline-none font-body text-sm font-bold">
+           <option value="alugado">Alugado</option>
+           <option value="reparo">Em Reparo</option>
+           <option value="perdido">Perdido</option>
+         </select>
+      </div>
+
+      <div class="flex flex-col gap-1">
+         <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">Equipamento</label>
+         <select id="alug-equipamento" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-3 rounded outline-none font-body text-sm font-bold">
+           <option value="">Selecione o equipamento...</option>
+         </select>
+      </div>
+      
+      <div class="flex flex-col gap-1">
+         <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">Para quem / Responsável</label>
+         <input id="alug-cliente" type="text" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-3 rounded outline-none font-body text-sm" placeholder="Nome ou Empresa">
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1">
+           <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">Data</label>
+           <input id="alug-data" type="date" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-3 rounded outline-none font-body text-sm text-outline">
+        </div>
+        <div class="flex flex-col gap-1">
+           <label class="font-label text-xs font-bold text-outline uppercase tracking-widest">Obs</label>
+           <input id="alug-obs" type="text" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-3 rounded outline-none font-body text-sm" placeholder="Ex: Devolução 25/03">
+        </div>
+      </div>
+
+      <button id="salvar-aluguel" class="w-full mt-6 bg-surface-container-highest hover:bg-primary-container hover:text-on-primary-container text-on-surface text-sm font-black uppercase tracking-[0.2em] py-4 rounded-xl transition-colors outline-none shadow-sm flex items-center justify-center gap-2">
+         <span class="material-symbols-outlined text-sm">lock</span>
+         SALVAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalhes do Registro -->
+<div id="modal-registro" class="modal-overlay">
+  <div class="modal-card" style="max-width: 580px; max-height: 90dvh; overflow-y: auto; padding: 0; border-radius: 1.25rem;">
+
+    <!-- Header com borda amarela -->
+    <div class="p-6 border-l-4 border-primary-container" style="border-radius: 1.25rem 1.25rem 0 0; background: #fff;">
+      <div class="flex justify-between items-start">
+        <div class="flex-1 min-w-0 pr-4">
+          <span class="font-label text-[10px] text-outline font-bold tracking-widest uppercase">LOG DE REGISTRO</span>
+          <h3 id="modal-reg-cliente" class="font-headline font-bold text-2xl uppercase tracking-tighter leading-tight mt-1 truncate"></h3>
+        </div>
+        <button id="close-modal-registro" class="material-symbols-outlined text-outline hover:text-on-surface outline-none flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">close</button>
+      </div>
+
+      <!-- Meta info -->
+      <div class="grid grid-cols-2 gap-3 mt-5">
+        <div class="bg-surface-container-low rounded-xl p-4">
+          <span class="font-label text-[10px] text-outline font-bold tracking-widest uppercase block mb-1">Data</span>
+          <span id="modal-reg-data" class="font-headline font-bold text-lg text-on-surface"></span>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-4">
+          <span class="font-label text-[10px] text-outline font-bold tracking-widest uppercase block mb-1">Equipamentos</span>
+          <span id="modal-reg-count" class="font-headline font-bold text-lg text-primary"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 space-y-6">
+
+      <!-- Status -->
+      <div>
+        <div class="flex items-center gap-2 mb-3 border-b border-outline-variant/20 pb-2">
+          <span class="material-symbols-outlined text-primary text-base">flag</span>
+          <span class="font-label text-[10px] text-outline font-bold tracking-widest uppercase">Status da Pauta</span>
+        </div>
+        <div class="flex gap-2" id="modal-status-btns"></div>
+      </div>
+
+      <!-- Equipe -->
+      <div>
+        <div class="flex items-center gap-2 mb-3 border-b border-outline-variant/20 pb-2">
+          <span class="material-symbols-outlined text-primary text-base">group</span>
+          <span class="font-label text-[10px] text-outline font-bold tracking-widest uppercase">Equipe Designada</span>
+        </div>
+        <div id="modal-reg-equipe" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Equipamentos -->
+      <div>
+        <div class="flex items-center justify-between border-b border-outline-variant/20 pb-2 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-base">inventory_2</span>
+            <span class="font-label text-[10px] text-outline font-bold tracking-widest uppercase">Equipamentos Utilizados</span>
+          </div>
+          <span id="modal-reg-count-label" class="font-label text-[10px] text-outline font-bold tracking-widest uppercase"></span>
+        </div>
+        <div id="modal-reg-equipamentos" class="space-y-2"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pt-2 flex justify-end border-t border-outline-variant/15">
+        <button id="modal-reg-delete" class="flex items-center gap-2 bg-surface-container-high hover:bg-error hover:text-white text-on-surface-variant px-5 py-3 rounded-xl font-label text-xs font-black uppercase tracking-widest transition-all outline-none">
+          <span class="material-symbols-outlined text-sm">delete</span>
+          Excluir Registro
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full h-20 md:h-24 flex justify-around items-center px-4 pb-safe bg-surface-container-low/80 dark:bg-zinc-900/80 backdrop-blur-xl z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.04)] sm:rounded-t-2xl md:hidden">
+  <button class="nav-btn-mobile flex flex-col items-center justify-center bg-yellow-400 text-stone-900 rounded-xl px-4 py-2 shadow-sm transition-all outline-none" data-view="novo">
+    <span class="material-symbols-outlined mb-1 text-[20px]">add_box</span>
+    <span class="font-['Inter'] text-[10px] font-bold uppercase tracking-widest">NOVO</span>
+  </button>
+  <button class="nav-btn-mobile flex flex-col items-center justify-center text-stone-500 dark:text-zinc-400 opacity-60 hover:opacity-100 transition-opacity px-4 py-2 outline-none" data-view="bloqueados">
+    <span class="material-symbols-outlined mb-1 text-[20px]" style="font-variation-settings: 'FILL' 1;">lock_person</span>
+    <span class="font-['Inter'] text-[10px] font-bold uppercase tracking-widest">BLOQUEADOS</span>
+  </button>
+  <button class="nav-btn-mobile flex flex-col items-center justify-center text-stone-500 dark:text-zinc-400 opacity-60 hover:opacity-100 transition-opacity px-4 py-2 outline-none" data-view="historico">
+    <span class="material-symbols-outlined mb-1 text-[20px]">history</span>
+    <span class="font-['Inter'] text-[10px] font-bold uppercase tracking-widest">HISTORICO</span>
+  </button>
+
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
