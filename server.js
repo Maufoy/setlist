@@ -30,11 +30,17 @@ const initializeFile = (filePath, content = '[]') => {
 initializeFile(REGISTROS_FILE, '[]');
 initializeFile(BLOQUEADOS_FILE, '[]');
 initializeFile(PERFIL_FILE, '{}');
-if (!fs.existsSync(EQUIPAMENTOS_FILE)) {
-  // If equipamentos.txt doesn't exist in DATA_DIR, try to copy it from root if root is different
-  const rootEquipamentos = path.join(__dirname, 'equipamentos.txt');
-  if (DATA_DIR !== __dirname && fs.existsSync(rootEquipamentos)) {
+const rootEquipamentos = path.join(__dirname, 'equipamentos.txt');
+const isExample = (filePath) => {
+  if (!fs.existsSync(filePath)) return true;
+  const content = fs.readFileSync(filePath, 'utf-8');
+  return content.includes('Equipamento Exemplo');
+};
+
+if (!fs.existsSync(EQUIPAMENTOS_FILE) || isExample(EQUIPAMENTOS_FILE)) {
+  if (fs.existsSync(rootEquipamentos)) {
     fs.copyFileSync(rootEquipamentos, EQUIPAMENTOS_FILE);
+    console.log(`Restored equipments from template: ${rootEquipamentos}`);
   } else if (!fs.existsSync(EQUIPAMENTOS_FILE)) {
     fs.writeFileSync(EQUIPAMENTOS_FILE, '[GERAL]\nEquipamento Exemplo', 'utf-8');
   }
