@@ -2,8 +2,11 @@ node_modules/
 *.log
 .DS_Store
 .env
-# Ignorando arquivos de dados locais para o deploy inicial (serão gerenciados via volumes no Easypanel)
+
+# Arquivos de dados (gerenciados via Volume no Easypanel)
+data/
 registros.json
 bloqueados.json
 perfil.json
 alugados.json
+equipamentos.txt

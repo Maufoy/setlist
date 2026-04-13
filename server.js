@@ -1,24 +1,78 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const EQUIPAMENTOS_FILE = path.join(__dirname, 'equipamentos.txt');
-const REGISTROS_FILE    = path.join(__dirname, 'registros.json');
-const BLOQUEADOS_FILE   = path.join(__dirname, 'bloqueados.json');
-const PERFIL_FILE       = path.join(__dirname, 'perfil.json');
+// Configuration for data persistence
+const DATA_DIR = process.env.DATA_DIR || __dirname;
+
+// Ensure DATA_DIR exists
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+const EQUIPAMENTOS_FILE = path.join(DATA_DIR, 'equipamentos.txt');
+const REGISTROS_FILE    = path.join(DATA_DIR, 'registros.json');
+const BLOQUEADOS_FILE   = path.join(DATA_DIR, 'bloqueados.json');
+const PERFIL_FILE       = path.join(DATA_DIR, 'perfil.json');
+
+// Initialize files if they don't exist
+const initializeFile = (filePath, content = '[]') => {
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, content, 'utf-8');
+    console.log(`Initialized file: ${filePath}`);
+  }
+};
+
+initializeFile(REGISTROS_FILE, '[]');
+initializeFile(BLOQUEADOS_FILE, '[]');
+initializeFile(PERFIL_FILE, '{}');
+if (!fs.existsSync(EQUIPAMENTOS_FILE)) {
+  // If equipamentos.txt doesn't exist in DATA_DIR, try to copy it from root if root is different
+  const rootEquipamentos = path.join(__dirname, 'equipamentos.txt');
+  if (DATA_DIR !== __dirname && fs.existsSync(rootEquipamentos)) {
+    fs.copyFileSync(rootEquipamentos, EQUIPAMENTOS_FILE);
+  } else if (!fs.existsSync(EQUIPAMENTOS_FILE)) {
+    fs.writeFileSync(EQUIPAMENTOS_FILE, '[GERAL]\nEquipamento Exemplo', 'utf-8');
+  }
+}
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 function readJson(file, fallback = []) {
-  try { return JSON.parse(fs.readFileSync(file, 'utf-8')); }
-  catch { return fallback; }
+  try {
+    if (!fs.existsSync(file)) return fallback;
+    const content = fs.readFileSync(file, 'utf-8');
+    return content ? JSON.parse(content) : fallback;
+  } catch (err) {
+    console.error(`Erro ao ler arquivo ${file}:`, err.message);
+    return fallback;
+  }
 }
+
 function writeJson(file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  try {
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.error(`ERRO CRÍTICO ao gravar arquivo ${file}:`, err.message);
+    if (err.code === 'EACCES' || err.code === 'EPERM') {
+      console.error(`DICA: O servidor não tem permissão para escrever em ${file}. Verifique o Host Path no Easypanel.`);
+    }
+  }
+}
+
+// Write test on startup
+try {
+  const testFile = path.join(DATA_DIR, '.write_test');
+  fs.writeFileSync(testFile, 'ok');
+  fs.unlinkSync(testFile);
+  console.log(`Sucesso: Pasta de dados ${DATA_DIR} é gravável.`);
+} catch (err) {
+  console.error(`ERRO DE PERMISSÃO: Não foi possível escrever na pasta ${DATA_DIR}:`, err.message);
 }
 
 // ── Equipamentos ─────────────────────────────────────────────
