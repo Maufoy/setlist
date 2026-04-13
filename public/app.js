@@ -418,7 +418,14 @@ async function saveRegistro() {
     const res = await fetch('/api/registros', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data, cliente, equipe: [...equipe], equipamentos: equipSel, status: selectedStatus })
+      body: JSON.stringify({
+        data,
+        cliente,
+        equipe: [...equipe],
+        equipamentos: equipSel,
+        status: selectedStatus,
+        observacoes: document.getElementById('observacoes').value.trim()
+      })
     });
     if (res.ok) {
       const novo = await res.json();
@@ -440,6 +447,7 @@ function clearForm() {
   equipe = [];
   selectedEquipamentos.clear();
   selectedStatus = 'em-producao';
+  document.getElementById('observacoes').value = '';
   renderStatusBtns('status-selector', selectedStatus, '_setFormStatus');
   renderEquipe();
   renderEquipamentos(categorias, '');
@@ -639,6 +647,16 @@ window.openRegistroDetail = function(id) {
 
   document.getElementById('modal-reg-equipamentos').innerHTML = equipHtml ||
     '<span class="font-label text-xs text-outline">Nenhum equipamento registrado</span>';
+    
+  // Observações
+  const obsContainer = document.getElementById('modal-reg-obs-container');
+  const obsText = document.getElementById('modal-reg-obs');
+  if (r.observacoes && r.observacoes.trim()) {
+    obsContainer.classList.remove('escondido');
+    obsText.textContent = r.observacoes;
+  } else {
+    obsContainer.classList.add('escondido');
+  }
 
   // Status
   window._setModalStatus = function(s) { changeRegistroStatus(r.id, s); };

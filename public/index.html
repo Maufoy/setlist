@@ -187,6 +187,13 @@
           </div>
           <div id="equipe-lista" class="flex flex-wrap gap-2 min-h-[30px]"></div>
         </div>
+
+        <!-- Observations Section -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+          <label class="font-label text-xs font-bold text-outline uppercase tracking-widest pl-1">Feedback / Observações</label>
+          <textarea id="observacoes" placeholder="Comentários sobre a produção, equipamentos, pautas..." 
+            class="w-full bg-surface-container-low border-2 border-transparent focus:border-primary-container focus:bg-surface-container rounded-3xl p-4 text-sm font-medium outline-none transition-all resize-none h-24"></textarea>
+        </div>
       </div>
 
       <!-- Equipment Selection Canvas -->
@@ -476,6 +483,15 @@
           <span id="modal-reg-count-label" class="font-label text-[10px] text-outline font-bold tracking-widest uppercase"></span>
         </div>
         <div id="modal-reg-equipamentos" class="space-y-2"></div>
+      </div>
+
+      <!-- Observações -->
+      <div id="modal-reg-obs-container" class="bg-surface-container-low/50 p-5 rounded-2xl border-l-4 border-outline-variant/30">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-outline text-base">sticky_note_2</span>
+          <span class="font-label text-[10px] text-outline font-bold tracking-widest uppercase">Observações e Feedback</span>
+        </div>
+        <p id="modal-reg-obs" class="font-body text-sm text-on-surface-variant italic leading-relaxed"></p>
       </div>
 
       <!-- Actions -->

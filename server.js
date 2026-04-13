@@ -150,7 +150,7 @@ app.get('/api/registros', (req, res) => {
 });
 
 app.post('/api/registros', (req, res) => {
-  const { data, cliente, equipe, equipamentos, status } = req.body;
+  const { data, cliente, equipe, equipamentos, status, observacoes } = req.body;
   if (!data || !cliente || !equipe || !equipamentos) {
     return res.status(400).json({ error: 'Campos obrigatórios ausentes' });
   }
@@ -162,6 +162,7 @@ app.post('/api/registros', (req, res) => {
     equipe,
     equipamentos,
     status: status || 'em-producao',
+    observacoes: observacoes || '',
     criadoEm: new Date().toISOString()
   };
   registros.unshift(novo);
