@@ -189,10 +189,20 @@
         </div>
 
         <!-- Observations Section -->
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
-          <label class="font-label text-xs font-bold text-outline uppercase tracking-widest pl-1">Feedback / Observações</label>
-          <textarea id="observacoes" placeholder="Comentários sobre a produção, equipamentos, pautas..." 
-            class="w-full bg-surface-container-low border-2 border-transparent focus:border-primary-container focus:bg-surface-container rounded-3xl p-4 text-sm font-medium outline-none transition-all resize-none h-24"></textarea>
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+          <button type="button" id="btn-add-obs" class="w-full flex items-center justify-center gap-2 py-4 border-2 border-dashed border-outline-variant/50 hover:border-primary-container text-outline hover:text-primary rounded-2xl transition-all outline-none font-label text-[10px] font-bold uppercase tracking-widest bg-surface-container-low/30">
+            <span class="material-symbols-outlined text-[18px]">add_comment</span>
+            Adicionar Feedback / Observação?
+          </button>
+          
+          <div id="obs-container" class="space-y-4 escondido">
+            <div class="flex justify-between items-center">
+              <label class="font-label text-xs font-bold text-outline uppercase tracking-widest pl-1">Feedback / Observações</label>
+              <button type="button" id="btn-remove-obs" class="material-symbols-outlined text-outline hover:text-error text-base outline-none">cancel</button>
+            </div>
+            <textarea id="observacoes" placeholder="Comentários sobre a produção, equipamentos, pautas..." 
+              class="w-full bg-surface-container-low border-2 border-transparent focus:border-primary-container focus:bg-surface-container rounded-3xl p-4 text-sm font-medium outline-none transition-all resize-none h-24"></textarea>
+          </div>
         </div>
       </div>
 

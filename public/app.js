@@ -377,6 +377,24 @@ function setupForm() {
     document.getElementById('filtro-data').value = '';
     renderRegistros(registros);
   });
+
+  // Toggle Observações
+  const btnAddObs = document.getElementById('btn-add-obs');
+  const btnRemoveObs = document.getElementById('btn-remove-obs');
+  const obsContainer = document.getElementById('obs-container');
+  const obsTextarea = document.getElementById('observacoes');
+
+  btnAddObs.addEventListener('click', () => {
+    btnAddObs.classList.add('escondido');
+    obsContainer.classList.remove('escondido');
+    obsTextarea.focus();
+  });
+
+  btnRemoveObs.addEventListener('click', () => {
+    btnAddObs.classList.remove('escondido');
+    obsContainer.classList.add('escondido');
+    obsTextarea.value = '';
+  });
 }
 
 function addMembro() {
@@ -448,6 +466,8 @@ function clearForm() {
   selectedEquipamentos.clear();
   selectedStatus = 'em-producao';
   document.getElementById('observacoes').value = '';
+  document.getElementById('btn-add-obs').classList.remove('escondido');
+  document.getElementById('obs-container').classList.add('escondido');
   renderStatusBtns('status-selector', selectedStatus, '_setFormStatus');
   renderEquipe();
   renderEquipamentos(categorias, '');
