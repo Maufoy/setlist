@@ -103,6 +103,11 @@
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-card { background: #fff; border-radius: 1rem; width: 90%; max-width: 500px; padding: 2rem; transform: scale(0.95); transition: transform 0.2s; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
     .modal-overlay.active .modal-card { transform: scale(1); }
+    
+    /* auth classes */
+    .unauthenticated header, .unauthenticated main, .unauthenticated nav { display: none !important; }
+    #view-auth { transition: opacity 0.5s ease-out; }
+    body:not(.unauthenticated) #view-auth { opacity: 0; pointer-events: none; }
   </style>
   <script>
     // Bloqueia pinch-to-zoom no iOS Safari (ignora user-scalable desde iOS 10)
@@ -114,7 +119,65 @@
     }, { passive: false });
   </script>
 </head>
-<body class="bg-background text-on-background font-body selection:bg-primary-container/30">
+<body class="bg-background text-on-background font-body selection:bg-primary-container/30 unauthenticated">
+
+<!-- ── VIEW: AUTH (LOGIN/SIGNUP) ── -->
+<section id="view-auth" class="fixed inset-0 z-[100] bg-background flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-surface-container-lowest rounded-3xl shadow-2xl overflow-hidden border border-outline-variant/10">
+    <div class="p-8">
+      <div class="flex items-center gap-3 mb-8">
+        <span class="material-symbols-outlined text-yellow-600 text-4xl">camera</span>
+        <h1 class="font-['Space_Grotesk'] tracking-tight font-bold text-3xl uppercase text-stone-900">SET LIST</h1>
+      </div>
+      
+      <!-- Login Form -->
+      <div id="auth-login">
+        <h2 class="font-headline text-2xl font-bold mb-6">Bem-vindo de volta</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block font-label text-xs font-bold text-outline uppercase tracking-widest mb-1 pl-1">Email</label>
+            <input id="login-email" type="email" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-4 rounded-xl outline-none font-body" placeholder="seu@email.com">
+          </div>
+          <div>
+            <label class="block font-label text-xs font-bold text-outline uppercase tracking-widest mb-1 pl-1">Senha</label>
+            <input id="login-password" type="password" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-4 rounded-xl outline-none font-body" placeholder="••••••••">
+          </div>
+          <button id="btn-login" class="w-full bg-primary-container text-on-primary-container font-black py-4 rounded-xl uppercase tracking-widest mt-4 shadow-lg hover:brightness-105 active:scale-95 transition-all outline-none">
+            Entrar
+          </button>
+          <p class="text-center text-sm font-label text-outline mt-6">
+            Não tem uma conta? <button id="switch-to-register" class="text-primary font-bold hover:underline">Cadastre-se</button>
+          </p>
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div id="auth-register" class="escondido">
+        <h2 class="font-headline text-2xl font-bold mb-6">Criar Conta</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block font-label text-xs font-bold text-outline uppercase tracking-widest mb-1 pl-1">Nome Completo</label>
+            <input id="reg-nome" type="text" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-4 rounded-xl outline-none font-body" placeholder="Seu Nome">
+          </div>
+          <div>
+            <label class="block font-label text-xs font-bold text-outline uppercase tracking-widest mb-1 pl-1">Email</label>
+            <input id="reg-email" type="email" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-4 rounded-xl outline-none font-body" placeholder="seu@email.com">
+          </div>
+          <div>
+            <label class="block font-label text-xs font-bold text-outline uppercase tracking-widest mb-1 pl-1">Senha</label>
+            <input id="reg-password" type="password" class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-primary-container p-4 rounded-xl outline-none font-body" placeholder="Crie uma senha forte">
+          </div>
+          <button id="btn-register" class="w-full bg-zinc-900 text-white font-black py-4 rounded-xl uppercase tracking-widest mt-4 shadow-lg hover:bg-zinc-800 active:scale-95 transition-all outline-none">
+            Cadastrar
+          </button>
+          <p class="text-center text-sm font-label text-outline mt-6">
+            Já tem conta? <button id="switch-to-login" class="text-primary font-bold hover:underline">Fazer Login</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- Top Navigation Shell -->
 <header class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.04)] flex items-center justify-between px-6 h-16 md:h-20 w-full">

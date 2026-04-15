@@ -1,12 +1,24 @@
-let categorias = [];
-let bloqueados = [];
-let selectedEquipamentos = new Set();
-let equipe = [];
-let registros = [];
 let perfilData = {};
 let selectedStatus = 'em-producao';
+let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+  setupAuth();
+  checkAuth();
+});
+
+async function checkAuth() {
+  const saved = localStorage.getItem('set_list_user');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+    document.body.classList.remove('unauthenticated');
+    initializeDashboard();
+  } else {
+    document.body.classList.add('unauthenticated');
+  }
+}
+
+function initializeDashboard() {
   setupNavigation();
   setupForm();
   setupBloqueados();
@@ -15,9 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEstoque();
   loadEquipamentos();
   const today = new Date().toISOString().split('T')[0];
-  document.getElementById('data').value = today;
-  document.getElementById('alug-data').value = today;
-});
+  if (document.getElementById('data')) document.getElementById('data').value = today;
+  if (document.getElementById('alug-data')) document.getElementById('alug-data').value = today;
+}
+
+// Wrapper for fetch to include User-ID
+async function authFetch(url, options = {}) {
+  if (!currentUser) return null;
+  const headers = options.headers || {};
+  headers['User-ID'] = currentUser.id;
+  return fetch(url, { ...options, headers });
+}
 
 // ── Navigation ────────────────────────────────────────────────
 function setupNavigation() {
@@ -60,14 +80,77 @@ function setupNavigation() {
   document.getElementById('avatar-btn').addEventListener('click', () => setView('perfil'));
 }
 
+// ── Authentication Logic ──────────────────────────────────────
+function setupAuth() {
+  const loginView = document.getElementById('auth-login');
+  const registerView = document.getElementById('auth-register');
+  const toRegList = [document.getElementById('switch-to-register')];
+  const toLogList = [document.getElementById('switch-to-login')];
+
+  toRegList.forEach(b => b.addEventListener('click', () => {
+    loginView.classList.add('escondido');
+    registerView.classList.remove('escondido');
+  }));
+
+  toLogList.forEach(b => b.addEventListener('click', () => {
+    registerView.classList.add('escondido');
+    loginView.classList.remove('escondido');
+  }));
+
+  document.getElementById('btn-login').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    if (!email || !password) return showToast('Preencha os campos', 'error');
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      if (res.ok) {
+        currentUser = await res.json();
+        localStorage.setItem('set_list_user', JSON.stringify(currentUser));
+        location.reload(); // Quickest way to re-init everything
+      } else {
+        showToast('Login falhou. Verifique email e senha.', 'error');
+      }
+    } catch { showToast('Erro de conexão', 'error'); }
+  });
+
+  document.getElementById('btn-register').addEventListener('click', async () => {
+    const nome = document.getElementById('reg-nome').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    if (!nome || !email || !password) return showToast('Preencha todos os campos', 'error');
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, email, password })
+      });
+      if (res.ok) {
+        showToast('Conta criada! Faça login.');
+        registerView.classList.add('escondido');
+        loginView.classList.remove('escondido');
+      } else {
+        const err = await res.json();
+        showToast(err.error || 'Erro ao registrar', 'error');
+      }
+    } catch { showToast('Erro de conexão', 'error'); }
+  });
+}
+
 // ── Equipamentos ──────────────────────────────────────────────
 async function loadEquipamentos() {
   try {
     const [catRes, blqRes, regRes] = await Promise.all([
-      fetch('/api/equipamentos'),
-      fetch('/api/bloqueados'),
-      fetch('/api/registros')
+      authFetch('/api/equipamentos'),
+      authFetch('/api/bloqueados'),
+      authFetch('/api/registros')
     ]);
+    if (!catRes.ok || !blqRes.ok || !regRes.ok) throw new Error('Falha no carregamento');
     categorias = await catRes.json();
     bloqueados = await blqRes.json();
     registros = await regRes.json();
@@ -247,7 +330,7 @@ function populateBloqueadosSelect() {
 
 async function loadBloqueados() {
   try {
-    const res = await fetch('/api/bloqueados');
+    const res = await authFetch('/api/bloqueados');
     bloqueados = await res.json();
     renderBloqueados();
   } catch {
@@ -307,7 +390,7 @@ async function saveBloqueio() {
   if (!equipamento || !dataInicio) { showToast('Faltam dados obrigatórios', 'error'); return; }
 
   try {
-    const res = await fetch('/api/bloqueados', {
+    const res = await authFetch('/api/bloqueados', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ equipamento, cliente, tipo, dataInicio, observacao })
@@ -335,7 +418,7 @@ async function saveBloqueio() {
 window.removerBloqueio = async function(id) {
   if (!confirm('Confirmar remoção de bloqueio deste equipamento?')) return;
   try {
-    const res = await fetch('/api/bloqueados/' + id, { method: 'DELETE' });
+    const res = await authFetch('/api/bloqueados/' + id, { method: 'DELETE' });
     if (res.ok) {
       bloqueados = bloqueados.filter(a => a.id !== id);
       renderBloqueados();
@@ -435,7 +518,7 @@ async function saveRegistro() {
   if (!equipSel.length) { showToast('Selecione ao menos um equipamento', 'error'); return; }
 
   try {
-    const res = await fetch('/api/registros', {
+    const res = await authFetch('/api/registros', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -479,7 +562,7 @@ function clearForm() {
 async function loadRegistros() {
   document.getElementById('registros-lista').innerHTML = '<p class="text-center font-label text-outline py-10">Carregando...</p>';
   try {
-    const res = await fetch('/api/registros');
+    const res = await authFetch('/api/registros');
     registros = await res.json();
     renderRegistros(registros);
   } catch {
@@ -563,7 +646,7 @@ function filterRegistros() {
 window.deleteRegistro = async function(id) {
   if (!confirm('Deseja realmente apagar este registro de uso do histórico?')) return;
   try {
-    const res = await fetch('/api/registros/' + id, { method: 'DELETE' });
+    const res = await authFetch('/api/registros/' + id, { method: 'DELETE' });
     if (res.ok) {
       registros = registros.filter(r => r.id !== id);
       filterRegistros();
@@ -696,7 +779,7 @@ window.openRegistroDetail = function(id) {
 
 window.changeRegistroStatus = async function(id, newStatus) {
   try {
-    const res = await fetch('/api/registros/' + id, {
+    const res = await authFetch('/api/registros/' + id, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: newStatus })
@@ -730,13 +813,14 @@ function setupPerfil() {
   document.getElementById('btn-save-perfil').addEventListener('click', savePerfil);
   document.getElementById('btn-logout').addEventListener('click', () => {
     showToast('Sessão encerrada! Até logo 👋');
-    setTimeout(() => window.location.reload(), 1800);
+    localStorage.removeItem('set_list_user');
+    setTimeout(() => window.location.reload(), 1200);
   });
 }
 
 async function loadPerfil() {
   try {
-    const res = await fetch('/api/perfil');
+    const res = await authFetch('/api/perfil');
     perfilData = await res.json();
     document.getElementById('perfil-nome-display').textContent = perfilData.nome || '';
     document.getElementById('perfil-cargo-display').textContent =
@@ -758,7 +842,7 @@ async function savePerfil() {
   btn.textContent = 'Salvando...';
 
   try {
-    const res = await fetch('/api/perfil', {
+    const res = await authFetch('/api/perfil', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nome, email })
@@ -873,7 +957,7 @@ window.removerCategoriaEstoque = function(catIdx) {
 
 async function saveChangesEstoque() {
   try {
-    const res = await fetch('/api/equipamentos', {
+    const res = await authFetch('/api/equipamentos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(categorias)
