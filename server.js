@@ -321,8 +321,8 @@ app.get('/api/perfil/avatar/:userId', (req, res) => {
   if (fs.existsSync(filePath)) {
     res.sendFile(filePath);
   } else {
-    // Default avatar
-    res.redirect('https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw');
+    // Default neutral avatar
+    res.redirect('https://ui-avatars.com/api/?name=User&background=777&color=fff');
   }
 });
 
