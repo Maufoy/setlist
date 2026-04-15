@@ -1,3 +1,8 @@
+let categorias = [];
+let bloqueados = [];
+let selectedEquipamentos = new Set();
+let equipe = [];
+let registros = [];
 let perfilData = {};
 let selectedStatus = 'em-producao';
 let currentUser = null;
