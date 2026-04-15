@@ -31,6 +31,7 @@ function initializeDashboard() {
   setupRegistroModal();
   setupEstoque();
   loadEquipamentos();
+  loadPerfil(); // Carrega foto e dados imediatamente ao abrir
   const today = new Date().toISOString().split('T')[0];
   if (document.getElementById('data')) document.getElementById('data').value = today;
   if (document.getElementById('alug-data')) document.getElementById('alug-data').value = today;
