@@ -773,6 +773,12 @@ window.openRegistroDetail = function(id) {
   window._setModalStatus = function(s) { changeRegistroStatus(r.id, s); };
   renderStatusBtns('modal-status-btns', r.status || 'em-producao', '_setModalStatus');
 
+  // Botão Compartilhar
+  const shareBtn = document.getElementById('modal-reg-share');
+  shareBtn.onclick = () => {
+    shareRecord(r);
+  };
+
   // Botão Excluir
   const deleteBtn = document.getElementById('modal-reg-delete');
   deleteBtn.onclick = () => {
@@ -782,6 +788,35 @@ window.openRegistroDetail = function(id) {
 
   document.getElementById('modal-registro').classList.add('active');
 };
+
+async function shareRecord(record) {
+  const shareUrl = `${window.location.origin}/view/${currentUser.id}/${record.id}`;
+  const shareText = `Set List - Produção: ${record.cliente}\nData: ${formatDate(record.data)}\nVeja os detalhes aqui:`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: `Set List - ${record.cliente}`,
+        text: shareText,
+        url: shareUrl
+      });
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        copyToClipboard(shareUrl);
+      }
+    }
+  } else {
+    copyToClipboard(shareUrl);
+  }
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Link de visualização copiado!');
+  }).catch(() => {
+    showToast('Erro ao copiar link', 'error');
+  });
+}
 
 window.changeRegistroStatus = async function(id, newStatus) {
   try {

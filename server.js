@@ -326,6 +326,124 @@ app.get('/api/perfil/avatar/:userId', (req, res) => {
   }
 });
 
+// ── Public View (Phase 5) ────────────────────────────────────
+app.get('/view/:userId/:recordId', (req, res) => {
+  try {
+    const { userId, recordId } = req.params;
+    const file = getUserPath(userId, 'registros.json');
+    const registros = readJson(file);
+    const item = registros.find(r => r.id === recordId);
+
+    if (!item) {
+      return res.status(404).send(`
+        <html>
+          <head><title>Não encontrado - Set List</title><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+          <body style="font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f4f4f4;">
+            <div style="text-align: center; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+              <h1>Produção não encontrada</h1>
+              <p>O link pode ter expirado ou estar incorreto.</p>
+            </div>
+          </body>
+        </html>
+      `);
+    }
+
+    const formatDate = (d) => new Date(d).toLocaleDateString('pt-BR', { dateStyle: 'long' });
+
+    res.send(`
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Set List - ${item.cliente}</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #fcfcfc; color: #1a1c1c; }
+    .font-headline { font-family: 'Space Grotesk', sans-serif; }
+    .status-badge { padding: 4px 12px; border-radius: 99px; text-transform: uppercase; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; }
+    .pre-producao { background: #e0f2fe; color: #0369a1; }
+    .em-producao { background: #fef9c3; color: #854d0e; }
+    .finalizado { background: #dcfce7; color: #15803d; }
+  </style>
+</head>
+<body class="p-6 md:p-12">
+  <div class="max-w-2xl mx-auto bg-white rounded-[2rem] shadow-[0_32px_64px_rgba(0,0,0,0.06)] border border-stone-100 overflow-hidden">
+    <header class="bg-stone-50 p-8 md:p-12 border-b border-stone-100">
+      <div class="flex items-center gap-3 mb-8">
+        <span class="material-symbols-outlined text-yellow-600 text-3xl">camera</span>
+        <h1 class="font-headline tracking-tighter font-bold text-2xl uppercase">SET LIST</h1>
+      </div>
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <span class="status-badge ${item.status || 'pre-producao'} mb-3 inline-block">
+            ${(item.status || 'PRE-PRODUCAO').replace('-', ' ')}
+          </span>
+          <h2 class="font-headline text-4xl font-bold tracking-tight text-stone-900 uppercase">${item.cliente}</h2>
+          <div class="flex items-center gap-2 text-stone-500 mt-2 font-medium">
+            <span class="material-symbols-outlined text-sm">calendar_today</span>
+            <span>${formatDate(item.data)}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="p-8 md:p-12 space-y-10">
+      <!-- Equipe -->
+      <section>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined text-stone-400 text-lg">group</span>
+          <h3 class="font-black text-xs uppercase tracking-[0.2em] text-stone-400">EQUIPE TÉCNICA</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          ${item.equipe.map(m => `
+            <span class="bg-stone-100 px-4 py-2 rounded-xl text-sm font-bold text-stone-700">${m}</span>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- Equipamentos -->
+      <section>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined text-stone-400 text-lg">inventory_2</span>
+          <h3 class="font-black text-xs uppercase tracking-[0.2em] text-stone-400">EQUIPAMENTOS</h3>
+        </div>
+        <div class="grid grid-cols-1 gap-2">
+          ${item.equipamentos.map(e => `
+            <div class="flex items-center gap-3 bg-stone-50/50 p-4 rounded-xl border border-stone-100/50">
+              <span class="material-symbols-outlined text-stone-300 text-lg">label</span>
+              <span class="font-medium text-stone-800">${e}</span>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      ${item.observacoes ? `
+      <section>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined text-stone-400 text-lg">notes</span>
+          <h3 class="font-black text-xs uppercase tracking-[0.2em] text-stone-400">OBSERVAÇÕES</h3>
+        </div>
+        <p class="text-stone-600 bg-stone-50 p-6 rounded-2xl italic leading-relaxed border-l-4 border-yellow-500/20">${item.observacoes}</p>
+      </section>
+      ` : ''}
+    </div>
+
+    <footer class="bg-stone-900 p-8 text-center">
+      <p class="text-stone-500 text-[10px] font-bold uppercase tracking-widest">&copy; 2026 SET LIST • PIXEL.CO</p>
+    </footer>
+  </div>
+</body>
+</html>
+    `);
+  } catch (e) {
+    res.status(500).send('Erro interno');
+  }
+});
+
 // Health check endpoint for Easypanel/Monitoring
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', uptime: process.uptime() });
