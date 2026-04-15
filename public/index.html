@@ -127,6 +127,7 @@
       <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="novo">NOVO REGISTRO</button>
       <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="bloqueados">BLOQUEADOS</button>
       <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="historico">HISTORICO</button>
+      <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="estoque">ESTOQUE</button>
     </div>
     <div id="avatar-btn" class="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 flex items-center justify-center overflow-hidden border-2 border-primary-container cursor-pointer" style="border-radius: 50%;">
       <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw"/>
@@ -333,6 +334,25 @@
     </section>
   </section>
 
+  <!-- ── VIEW: ESTOQUE ── -->
+  <section id="view-estoque" class="view max-w-4xl mx-auto">
+    <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <h2 class="font-headline text-4xl font-bold tracking-tighter text-on-surface uppercase">GERENCIAR ESTOQUE</h2>
+        <p class="font-label text-sm text-outline tracking-wide mt-1">CONFIGURAR CATEGORIAS E EQUIPAMENTOS</p>
+      </div>
+      <button id="btn-add-categoria" class="bg-primary-container text-on-primary-container font-black px-6 py-3 rounded-xl uppercase tracking-widest text-xs shadow-lg hover:brightness-105 active:scale-95 transition-all outline-none flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">post_add</span>
+        NOVA CATEGORIA
+      </button>
+    </header>
+
+    <div id="estoque-lista-completa" class="space-y-6">
+      <!-- Categorias e itens serão renderizados aqui -->
+      <p class="text-center text-outline font-label py-10">Carregando estoque...</p>
+    </div>
+  </section>
+
   <!-- ── VIEW: PERFIL ── -->
   <section id="view-perfil" class="view max-w-2xl mx-auto">
     <!-- Profile Header Section -->
@@ -537,7 +557,10 @@
     <span class="material-symbols-outlined mb-1 text-[20px]">history</span>
     <span class="font-['Inter'] text-[10px] font-bold uppercase tracking-widest">HISTORICO</span>
   </button>
-
+  <button class="nav-btn-mobile flex flex-col items-center justify-center text-stone-500 dark:text-zinc-400 opacity-60 hover:opacity-100 transition-opacity px-4 py-2 outline-none" data-view="estoque">
+    <span class="material-symbols-outlined mb-1 text-[20px]">inventory_2</span>
+    <span class="font-['Inter'] text-[10px] font-bold uppercase tracking-widest">ESTOQUE</span>
+  </button>
 </nav>
 
 <script src="app.js"></script>

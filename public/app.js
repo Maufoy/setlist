@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupBloqueados();
   setupPerfil();
   setupRegistroModal();
+  setupEstoque();
   loadEquipamentos();
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('data').value = today;
@@ -49,6 +50,7 @@ function setupNavigation() {
     if (view === 'historico') loadRegistros();
     if (view === 'bloqueados') loadBloqueados();
     if (view === 'perfil') loadPerfil();
+    if (view === 'estoque') renderEstoque();
   }
 
   desktops.forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.view)));
@@ -773,5 +775,117 @@ async function savePerfil() {
   } finally {
     btn.disabled = false;
     btn.textContent = 'Salvar Alterações';
+  }
+}
+
+// ── Gerenciamento de Estoque (Fase 2) ─────────────────────────
+function setupEstoque() {
+  document.getElementById('btn-add-categoria').addEventListener('click', () => {
+    const nome = prompt('Nome da nova categoria:');
+    if (!nome) return;
+    if (categorias.find(c => c.categoria.toLowerCase() === nome.toLowerCase())) {
+      showToast('Categoria já existe', 'error');
+      return;
+    }
+    categorias.push({ categoria: nome, itens: [] });
+    saveChangesEstoque();
+  });
+}
+
+function renderEstoque() {
+  const container = document.getElementById('estoque-lista-completa');
+  if (!categorias.length) {
+    container.innerHTML = '<p class="text-center text-outline font-label py-10">O estoque está vazio.</p>';
+    return;
+  }
+
+  container.innerHTML = categorias.map((cat, catIdx) => `
+    <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline-variant/10">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-outline-variant/10">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">category</span>
+          <h3 class="font-headline font-bold text-lg uppercase tracking-tight text-on-surface">${esc(cat.categoria)}</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="addEquipamentoEstoque(${catIdx})" class="p-2 text-primary hover:bg-primary/10 rounded-full transition-all" title="Adicionar Equipamento">
+            <span class="material-symbols-outlined text-xl">add_circle</span>
+          </button>
+          <button onclick="removerCategoriaEstoque(${catIdx})" class="p-2 text-outline hover:text-error hover:bg-error/10 rounded-full transition-all" title="Excluir Categoria">
+            <span class="material-symbols-outlined text-xl">delete</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        ${cat.itens.map((eq, eqIdx) => `
+          <div class="flex items-center justify-between bg-surface-container-low p-3 rounded-xl hover:bg-surface-container-high transition-colors group">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-outline text-sm">label</span>
+              <span class="font-body text-sm font-semibold text-on-surface">${esc(eq)}</span>
+            </div>
+            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+               <button onclick="editarEquipamentoEstoque(${catIdx}, ${eqIdx})" class="p-1.5 text-outline hover:text-primary transition-colors">
+                 <span class="material-symbols-outlined text-base">edit</span>
+               </button>
+               <button onclick="removerEquipamentoEstoque(${catIdx}, ${eqIdx})" class="p-1.5 text-outline hover:text-error transition-colors">
+                 <span class="material-symbols-outlined text-base">delete</span>
+               </button>
+            </div>
+          </div>
+        `).join('')}
+        ${cat.itens.length === 0 ? '<p class="text-xs font-label text-outline italic p-2">Nenhum item nesta categoria.</p>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+window.addEquipamentoEstoque = function(catIdx) {
+  const nome = prompt(`Novo equipamento para ${categorias[catIdx].categoria}:`);
+  if (!nome) return;
+  if (categorias[catIdx].itens.includes(nome)) {
+    showToast('Equipamento já registrado nesta categoria', 'error');
+    return;
+  }
+  categorias[catIdx].itens.push(nome);
+  saveChangesEstoque();
+};
+
+window.editarEquipamentoEstoque = function(catIdx, eqIdx) {
+  const atual = categorias[catIdx].itens[eqIdx];
+  const novo = prompt('Editar nome do equipamento:', atual);
+  if (!novo || novo === atual) return;
+  categorias[catIdx].itens[eqIdx] = novo;
+  saveChangesEstoque();
+};
+
+window.removerEquipamentoEstoque = function(catIdx, eqIdx) {
+  if (!confirm(`Deseja realmente excluir "${categorias[catIdx].itens[eqIdx]}"?`)) return;
+  categorias[catIdx].itens.splice(eqIdx, 1);
+  saveChangesEstoque();
+};
+
+window.removerCategoriaEstoque = function(catIdx) {
+  const cat = categorias[catIdx];
+  if (!confirm(`Deseja excluir a categoria "${cat.categoria}" e todos os seus ${cat.itens.length} itens?`)) return;
+  categorias.splice(catIdx, 1);
+  saveChangesEstoque();
+};
+
+async function saveChangesEstoque() {
+  try {
+    const res = await fetch('/api/equipamentos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(categorias)
+    });
+    if (res.ok) {
+      renderEstoque();
+      renderEquipamentos(categorias, ''); // Atualiza a lista na aba Novo Registro
+      showToast('Estoque atualizado com sucesso!');
+    } else {
+      showToast('Erro ao salvar alterações no estoque', 'error');
+    }
+  } catch {
+    showToast('Erro de conexão ao salvar estoque', 'error');
   }
 }
