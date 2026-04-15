@@ -245,6 +245,15 @@ app.post('/api/perfil', (req, res) => {
   res.json(p);
 });
 
+// Health check endpoint for Easypanel/Monitoring
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', uptime: process.uptime() });
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`\nSet List rodando em http://0.0.0.0:${PORT}\n`);
 });
