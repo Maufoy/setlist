@@ -294,6 +294,38 @@ app.post('/api/perfil', authenticate, (req, res) => {
   res.json(p);
 });
 
+app.post('/api/perfil/avatar', authenticate, (req, res) => {
+  try {
+    const { image } = req.body; // Expecting base64 string
+    if (!image) return res.status(400).json({ error: 'Nenhuma imagem enviada' });
+
+    // Extract base64 data
+    const matches = image.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) return res.status(400).json({ error: 'Formato de imagem inválido' });
+    
+    const buffer = Buffer.from(matches[2], 'base64');
+    const filePath = getUserPath(req.userId, 'avatar.jpg');
+    
+    fs.writeFileSync(filePath, buffer);
+    res.json({ ok: true, url: `/api/perfil/avatar/${req.userId}?t=${Date.now()}` });
+  } catch (e) {
+    console.error('Erro ao salvar avatar:', e);
+    res.status(500).json({ error: 'Erro ao processar imagem' });
+  }
+});
+
+app.get('/api/perfil/avatar/:userId', (req, res) => {
+  const userId = req.params.userId;
+  const filePath = path.join(DATA_DIR, 'users', userId, 'avatar.jpg');
+  
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    // Default avatar
+    res.redirect('https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw');
+  }
+});
+
 // Health check endpoint for Easypanel/Monitoring
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', uptime: process.uptime() });

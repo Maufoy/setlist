@@ -193,7 +193,7 @@
       <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="estoque">ESTOQUE</button>
     </div>
     <div id="avatar-btn" class="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 flex items-center justify-center overflow-hidden border-2 border-primary-container cursor-pointer" style="border-radius: 50%;">
-      <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw"/>
+      <img id="header-avatar-img" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw"/>
     </div>
   </div>
 </header>
@@ -422,11 +422,12 @@
     <section class="mb-12 flex flex-col items-center">
       <div class="relative">
         <div class="w-40 h-40 overflow-hidden bg-surface-container-low shadow-lg" style="border-radius: 50%; box-shadow: 0 0 0 4px white, 0 8px 32px rgba(0,0,0,0.12);">
-          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw"/>
+          <img id="profile-avatar-img" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD70U9uTpJCxflB3G5-wx60D_vtMYrRfIwGkycvLNHXsC-4bWDCt103QPtdPHbD3OvtAZYLphmAx8y49qzQy2nhX4FMI_AyKdcqlrVmPLiOiuXnOG8om3jXhplrNP0pA-2u-JkTIB0qjtWOW1ZXC5O-Tb6aQ1ySmWDXUulfB7A2kH5LtgZ21wu40VnHijfAa1DoxNJO0Q_1LWzWj5lJHAJMXcnOT5cVJoXuWpaHZGibpFU_7yVdu9mdQDGzfydPLYG6U1NH-iILdMw"/>
         </div>
-        <button class="absolute bottom-2 right-2 bg-primary-container text-on-primary-container p-3 shadow-xl active:scale-90 duration-200 border-4 border-white outline-none" style="border-radius: 50%;">
+        <button id="btn-edit-avatar" class="absolute bottom-2 right-2 bg-primary-container text-on-primary-container p-3 shadow-xl active:scale-90 duration-200 border-4 border-white outline-none" style="border-radius: 50%;">
           <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">edit</span>
         </button>
+        <input type="file" id="input-avatar" class="hidden" accept="image/*">
       </div>
       <div class="mt-6 text-center">
         <h2 id="perfil-nome-display" class="font-headline text-3xl font-bold tracking-tight text-on-surface">Carregando...</h2>

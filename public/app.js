@@ -821,6 +821,46 @@ function setupPerfil() {
     localStorage.removeItem('set_list_user');
     setTimeout(() => window.location.reload(), 1200);
   });
+
+  // Avatar Upload Logic
+  const inputAvatar = document.getElementById('input-avatar');
+  document.getElementById('btn-edit-avatar').addEventListener('click', () => inputAvatar.click());
+
+  inputAvatar.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) return showToast('Imagem muito grande (máx 2MB)', 'error');
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const base64 = event.target.result;
+      try {
+        const res = await authFetch('/api/perfil/avatar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64 })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          updateUIAvatars(data.url);
+          showToast('Foto atualizada com sucesso!');
+        } else {
+          showToast('Erro ao enviar foto', 'error');
+        }
+      } catch {
+        showToast('Erro de conexão ao enviar foto', 'error');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function updateUIAvatars(url) {
+  const t = Date.now();
+  const finalUrl = url.includes('?') ? `${url}&t=${t}` : `${url}?t=${t}`;
+  document.getElementById('header-avatar-img').src = finalUrl;
+  document.getElementById('profile-avatar-img').src = finalUrl;
 }
 
 async function loadPerfil() {
@@ -832,6 +872,10 @@ async function loadPerfil() {
       `${perfilData.cargo || 'Membro'} #${perfilData.id || '0000'}`;
     document.getElementById('perfil-nome-input').value = perfilData.nome || '';
     document.getElementById('perfil-email-input').value = perfilData.email || '';
+
+    // Load actual avatar from server
+    const avatarUrl = `/api/perfil/avatar/${currentUser.id}`;
+    updateUIAvatars(avatarUrl);
   } catch {
     showToast('Erro ao carregar perfil', 'error');
   }
