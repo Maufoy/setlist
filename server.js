@@ -245,6 +245,17 @@ app.post('/api/perfil', (req, res) => {
   res.json(p);
 });
 
-app.listen(PORT, () => {
-  console.log(`\nSet List rodando em http://localhost:${PORT}\n`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\nSet List rodando em http://0.0.0.0:${PORT}\n`);
+});
+
+// Signal handling for graceful shutdown and debugging
+process.on('SIGTERM', () => {
+  console.log('Sinal SIGTERM recebido. Encerrando servidor...');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('Sinal SIGINT recebido. Encerrando servidor...');
+  process.exit(0);
 });
