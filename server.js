@@ -105,6 +105,31 @@ app.get('/api/equipamentos', (req, res) => {
   }
 });
 
+app.post('/api/equipamentos', (req, res) => {
+  try {
+    const data = req.body;
+    if (!Array.isArray(data)) return res.status(400).json({ error: 'Formato inválido' });
+
+    let content = "# Lista de equipamentos - Set List\n";
+    content += "# Editado via interface em " + new Date().toLocaleString('pt-BR') + "\n\n";
+
+    data.forEach(cat => {
+      if (!cat.categoria || !Array.isArray(cat.itens)) return;
+      content += `[${cat.categoria.trim()}]\n`;
+      cat.itens.forEach(item => {
+        if (item && item.trim()) content += `${item.trim()}\n`;
+      });
+      content += "\n";
+    });
+
+    fs.writeFileSync(EQUIPAMENTOS_FILE, content, 'utf-8');
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('Erro ao salvar equipamentos:', e);
+    res.status(500).json({ error: 'Erro ao salvar equipamentos.txt' });
+  }
+});
+
 // ── Bloqueados ─────────────────────────────────────────────────
 app.get('/api/bloqueados', (req, res) => {
   res.json(readJson(BLOQUEADOS_FILE));
