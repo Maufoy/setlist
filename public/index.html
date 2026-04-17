@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html class="light" lang="pt-br">
+<html lang="pt-br">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
@@ -28,53 +27,24 @@
         theme: {
             extend: {
                 "colors": {
-                    "surface-dim": "#dadada",
-                    "primary-container": "#ffde03",
-                    "surface-container-lowest": "#ffffff",
-                    "on-secondary-container": "#72641c",
-                    "surface-container-low": "#f3f3f4",
-                    "primary": "#6d5e00",
-                    "inverse-primary": "#e3c600",
-                    "inverse-surface": "#2f3131",
-                    "primary-fixed-dim": "#e3c600",
-                    "on-tertiary-fixed-variant": "#004f52",
-                    "secondary": "#6b5e17",
-                    "surface-bright": "#f9f9f9",
-                    "on-secondary-fixed": "#211b00",
-                    "secondary-fixed": "#f6e38d",
-                    "on-primary-fixed-variant": "#524600",
-                    "on-background": "#1a1c1c",
-                    "secondary-fixed-dim": "#d9c774",
-                    "inverse-on-surface": "#f0f1f1",
-                    "on-tertiary-fixed": "#002021",
-                    "on-primary": "#ffffff",
-                    "on-error": "#ffffff",
-                    "outline": "#7d775f",
-                    "surface": "#f9f9f9",
-                    "tertiary-container": "#1cf6ff",
-                    "on-primary-fixed": "#211b00",
-                    "error-container": "#ffdad6",
-                    "on-error-container": "#93000a",
-                    "surface-container-highest": "#e2e2e2",
-                    "tertiary": "#00696d",
-                    "surface-container": "#eeeeee",
-                    "on-tertiary": "#ffffff",
-                    "error": "#ba1a1a",
-                    "primary-fixed": "#ffe24b",
-                    "tertiary-fixed": "#5df7ff",
-                    "background": "#f9f9f9",
-                    "on-secondary": "#ffffff",
-                    "on-primary-container": "#716200",
-                    "on-surface": "#1a1c1c",
-                    "on-tertiary-container": "#006d71",
-                    "secondary-container": "#f6e38d",
-                    "on-secondary-fixed-variant": "#524600",
-                    "surface-container-high": "#e8e8e8",
-                    "surface-variant": "#e2e2e2",
-                    "tertiary-fixed-dim": "#00dce4",
-                    "surface-tint": "#6d5e00",
-                    "on-surface-variant": "#4c4732",
-                    "outline-variant": "#cfc6ab"
+                    "primary": "var(--primary)",
+                    "primary-container": "var(--primary-container)",
+                    "on-primary-container": "var(--on-primary-container)",
+                    "background": "var(--background)",
+                    "on-background": "var(--on-background)",
+                    "surface": "var(--surface)",
+                    "on-surface": "var(--on-surface)",
+                    "surface-container-lowest": "var(--surface-container-lowest)",
+                    "surface-container-low": "var(--surface-container-low)",
+                    "surface-container": "var(--surface-container)",
+                    "surface-container-high": "var(--surface-container-high)",
+                    "surface-container-highest": "var(--surface-container-highest)",
+                    "outline": "var(--outline)",
+                    "outline-variant": "var(--outline-variant)",
+                    "error": "var(--error)",
+                    "tertiary": "var(--tertiary)",
+                    "tertiary-container": "var(--tertiary-container)",
+                    "on-tertiary": "var(--on-tertiary)",
                 },
                 "borderRadius": {
                     "DEFAULT": "0.125rem",
@@ -92,26 +62,68 @@
     }
   </script>
   <style>
+    :root {
+      --primary: #6d5e00;
+      --primary-container: #ffde03;
+      --on-primary-container: #716200;
+      --background: #f9f9f9;
+      --on-background: #1a1c1c;
+      --surface: #f9f9f9;
+      --on-surface: #1a1c1c;
+      --surface-container-lowest: #ffffff;
+      --surface-container-low: #f3f3f4;
+      --surface-container: #eeeeee;
+      --surface-container-high: #e8e8e8;
+      --surface-container-highest: #e2e2e2;
+      --outline: #7d775f;
+      --outline-variant: #cfc6ab;
+      --error: #ba1a1a;
+      --tertiary: #00696d;
+      --tertiary-container: #1cf6ff;
+      --on-tertiary: #ffffff;
+    }
+
+    .dark {
+      --primary: #e3c600;
+      --primary-container: #ffde03;
+      --on-primary-container: #1a1c1c;
+      --background: #0c0c0c;
+      --on-background: #e2e2e2;
+      --surface: #141414;
+      --on-surface: #e2e2e2;
+      --surface-container-lowest: #0c0c0c;
+      --surface-container-low: #1c1c1c;
+      --surface-container: #262626;
+      --surface-container-high: #333333;
+      --surface-container-highest: #3d3d3d;
+      --outline: #948f7a;
+      --outline-variant: #4c4732;
+      --error: #ffb4ab;
+      --tertiary: #00dce4;
+      --tertiary-container: #004f52;
+      --on-tertiary: #ffffff;
+    }
+
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e2e2; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--surface-container-highest); border-radius: 10px; }
     .glint-effect:active { background: linear-gradient(90deg, transparent, rgba(255, 222, 3, 0.2), transparent); background-size: 200% 100%; }
     .glint-effect:hover { position: relative; overflow: hidden; }
     .glint-effect:hover::after { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255, 222, 3, 0.1), transparent); transform: rotate(45deg); transition: all 0.6s ease; }
-    body { min-height: max(884px, 100dvh); background-color: #f9f9f9; }
+    body { min-height: max(884px, 100dvh); background-color: var(--background); color: var(--on-background); }
     .view { display: none; }
     .view.active { display: block; animation: fadeIn 0.18s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .toast { position: fixed; bottom: 6rem; right: 2rem; background: var(--text, #1a1c1c); color: var(--bg, #f9f9f9); border-radius: 8px; padding: 0.7rem 1.25rem; font-size: 0.9rem; font-family: 'Inter'; letter-spacing: 1.5px; font-weight: 700; z-index: 1000; transform: translateY(100px); opacity: 0; transition: all 0.25s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .toast { position: fixed; bottom: 6rem; right: 2rem; background: var(--on-background); color: var(--background); border-radius: 8px; padding: 0.7rem 1.25rem; font-size: 0.9rem; font-family: 'Inter'; letter-spacing: 1.5px; font-weight: 700; z-index: 1000; transform: translateY(100px); opacity: 0; transition: all 0.25s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.error { background: #ba1a1a; color: #fff; }
     .escondido { display: none !important; }
     
     /* modal stuff */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal-card { background: #fff; border-radius: 1rem; width: 90%; max-width: 500px; padding: 2rem; transform: scale(0.95); transition: transform 0.2s; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    .modal-card { background: var(--surface-container-lowest); border-radius: 1.5rem; width: 95%; max-width: 500px; padding: 2rem; transform: scale(0.95); transition: transform 0.2s; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid var(--outline-variant); }
     .modal-overlay.active .modal-card { transform: scale(1); }
     
     /* auth classes */
@@ -120,6 +132,21 @@
     body:not(.unauthenticated) #view-auth { opacity: 0; pointer-events: none; }
   </style>
   <script>
+    // Theme Management
+    function applyTheme() {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', isDark);
+      
+      // Update status bar color for mobile
+      const metaThemeColor = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', isDark ? 'black' : 'black-translucent');
+      }
+    }
+    
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+    applyTheme();
+
     // Bloqueia pinch-to-zoom no iOS Safari (ignora user-scalable desde iOS 10)
     document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
     document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
@@ -197,10 +224,10 @@
   </div>
   <div class="flex items-center gap-4">
     <div class="hidden md:flex gap-6 font-headline tracking-tighter uppercase font-bold">
-      <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="novo">NOVO REGISTRO</button>
-      <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="bloqueados">BLOQUEADOS</button>
-      <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="historico">HISTORICO</button>
-      <button class="nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl" data-view="estoque">ESTOQUE</button>
+      <button class="nav-btn-desktop text-on-background hover:bg-surface-container-high transition-colors px-3 py-1 rounded-xl" data-view="novo">NOVO REGISTRO</button>
+      <button class="nav-btn-desktop text-on-background hover:bg-surface-container-high transition-colors px-3 py-1 rounded-xl" data-view="bloqueados">BLOQUEADOS</button>
+      <button class="nav-btn-desktop text-on-background hover:bg-surface-container-high transition-colors px-3 py-1 rounded-xl" data-view="historico">HISTORICO</button>
+      <button class="nav-btn-desktop text-on-background hover:bg-surface-container-high transition-colors px-3 py-1 rounded-xl" data-view="estoque">ESTOQUE</button>
     </div>
     <div id="avatar-btn" class="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 flex items-center justify-center overflow-hidden border-2 border-primary-container cursor-pointer" style="border-radius: 50%;">
       <img id="header-avatar-img" class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=User&background=777&color=fff"/>
@@ -431,10 +458,10 @@
     <!-- Profile Header Section -->
     <section class="mb-12 flex flex-col items-center">
       <div class="relative">
-        <div class="w-40 h-40 overflow-hidden bg-surface-container-low shadow-lg" style="border-radius: 50%; box-shadow: 0 0 0 4px white, 0 8px 32px rgba(0,0,0,0.12);">
+        <div class="w-40 h-40 overflow-hidden bg-surface-container-low shadow-lg" style="border-radius: 50%; box-shadow: 0 0 0 4px var(--surface-container-lowest), 0 8px 32px rgba(0,0,0,0.2);">
           <img id="profile-avatar-img" class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=User&background=777&color=fff"/>
         </div>
-        <button id="btn-edit-avatar" class="absolute bottom-2 right-2 bg-primary-container text-on-primary-container p-3 shadow-xl active:scale-90 duration-200 border-4 border-white outline-none" style="border-radius: 50%;">
+        <button id="btn-edit-avatar" class="absolute bottom-2 right-2 bg-primary-container text-on-primary-container p-3 shadow-xl active:scale-90 duration-200 border-4 border-surface outline-none" style="border-radius: 50%;">
           <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">edit</span>
         </button>
         <input type="file" id="input-avatar" class="hidden" accept="image/*">
@@ -459,12 +486,12 @@
           <button id="btn-save-perfil" class="w-full bg-primary-container text-on-primary-container px-6 py-4 rounded-xl font-headline font-bold uppercase tracking-widest hover:brightness-105 transition-all outline-none">Salvar Alterações</button>
         </div>
         <div class="pt-4">
-          <button class="w-full flex items-center justify-between px-6 py-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] outline-none">
+          <button class="w-full flex items-center justify-between px-6 py-5 bg-surface-container-lowest rounded-xl shadow-sm hover:surface-container-low transition-all active:scale-[0.98] outline-none border border-outline-variant/10">
             <div class="flex items-center gap-4">
               <span class="material-symbols-outlined text-primary">lock_reset</span>
               <span class="font-body font-bold text-on-surface">Alterar Senha</span>
             </div>
-            <span class="material-symbols-outlined text-zinc-400">chevron_right</span>
+            <span class="material-symbols-outlined text-outline">chevron_right</span>
           </button>
         </div>
       </div>
@@ -538,7 +565,7 @@
   <div class="modal-card" style="max-width: 580px; max-height: 90dvh; overflow-y: auto; padding: 0; border-radius: 1.25rem;">
 
     <!-- Header com borda amarela -->
-    <div class="p-6 border-l-4 border-primary-container" style="border-radius: 1.25rem 1.25rem 0 0; background: #fff;">
+    <div class="p-6 border-l-4 border-primary-container" style="border-radius: 1.25rem 1.25rem 0 0; background: var(--surface-container-lowest);">
       <div class="flex justify-between items-start">
         <div class="flex-1 min-w-0 pr-4">
           <span class="font-label text-[10px] text-outline font-bold tracking-widest uppercase">LOG DE REGISTRO</span>
@@ -603,10 +630,14 @@
       </div>
 
       <!-- Actions -->
-      <div class="pt-2 flex justify-end gap-3 border-t border-outline-variant/15">
-        <button id="modal-reg-share" class="flex items-center gap-2 bg-primary-container text-on-primary-container px-5 py-3 rounded-xl font-label text-xs font-black uppercase tracking-widest transition-all shadow-lg hover:brightness-105 active:scale-95 outline-none">
+      <div class="pt-2 flex justify-end gap-3 border-t border-outline-variant/15 md:p-6 bg-surface-container-low/20">
+        <button id="modal-reg-share" class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-3 rounded-xl font-label text-[10px] font-black uppercase tracking-widest transition-all shadow-lg hover:brightness-105 active:scale-95 outline-none">
           <span class="material-symbols-outlined text-sm">share</span>
-          Compartilhar
+          Link
+        </button>
+        <button id="modal-reg-pdf" class="flex items-center gap-2 bg-zinc-900 text-white px-4 py-3 rounded-xl font-label text-[10px] font-black uppercase tracking-widest transition-all shadow-lg hover:bg-zinc-800 active:scale-95 outline-none">
+          <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+          PDF
         </button>
         <button id="modal-reg-delete" class="flex items-center gap-2 bg-surface-container-high hover:bg-error hover:text-white text-on-surface-variant px-5 py-3 rounded-xl font-label text-xs font-black uppercase tracking-widest transition-all outline-none">
           <span class="material-symbols-outlined text-sm">delete</span>
@@ -622,8 +653,8 @@
 <div id="toast" class="toast"></div>
 
 <!-- Bottom Navigation Shell -->
-<nav class="fixed bottom-0 left-0 w-full h-20 md:h-24 flex justify-around items-center px-4 pb-safe bg-surface-container-low/80 dark:bg-zinc-900/80 backdrop-blur-xl z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.04)] sm:rounded-t-2xl md:hidden">
-  <button class="nav-btn-mobile flex flex-col items-center justify-center bg-yellow-400 text-stone-900 rounded-xl px-4 py-2 shadow-sm transition-all outline-none" data-view="novo">
+<nav class="fixed bottom-0 left-0 w-full h-20 md:h-24 flex justify-around items-center px-4 pb-safe bg-surface-container-low/80 backdrop-blur-xl z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.04)] sm:rounded-t-2xl md:hidden">
+  <button class="nav-btn-mobile flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-2 shadow-sm transition-all outline-none" data-view="novo">
     <span class="material-symbols-outlined mb-1 text-[20px]">add_box</span>
     <span class="font-['Inter'] text-[10px] font-bold uppercase tracking-widest">NOVO</span>
   </button>
@@ -641,6 +672,52 @@
   </button>
 </nav>
 
-<script src="app.js"></script>
+<!-- PDF Template (Hidden) -->
+<div id="pdf-container" style="position: absolute; left: -9999px; top: -9999px;">
+  <div id="pdf-content" style="width: 800px; padding: 40px; background: white; font-family: 'Inter', sans-serif; color: #1a1c1c;">
+    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #ffde03; padding-bottom: 20px; margin-bottom: 30px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span class="material-symbols-outlined" style="color: #6d5e00; font-size: 32px;">camera</span>
+        <h1 style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 24px; margin: 0; text-transform: uppercase; letter-spacing: -0.05em;">SET LIST</h1>
+      </div>
+      <div style="text-align: right;">
+        <p style="margin: 0; font-size: 10px; font-weight: 800; color: #7d775f; text-transform: uppercase; letter-spacing: 0.2em;">Relatório de Produção</p>
+        <p id="pdf-data-geracao" style="margin: 0; font-size: 12px; font-weight: 600; color: #1a1c1c;"></p>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 40px;">
+      <span id="pdf-status" style="display: inline-block; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;"></span>
+      <h2 id="pdf-cliente" style="font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: -0.05em; line-height: 1;"></h2>
+      <p id="pdf-data-producao" style="margin: 10px 0 0 0; font-size: 14px; color: #4c4732; font-weight: 500;"></p>
+    </div>
+
+    <div style="grid-template-columns: 1fr; gap: 40px; display: grid;">
+      <section>
+        <h3 style="font-size: 12px; font-weight: 800; color: #7d775f; text-transform: uppercase; letter-spacing: 0.2em; border-bottom: 1px solid #e2e2e2; padding-bottom: 10px; margin-bottom: 20px;">Equipe Técnica</h3>
+        <div id="pdf-equipe" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+      </section>
+
+      <section>
+        <h3 style="font-size: 12px; font-weight: 800; color: #7d775f; text-transform: uppercase; letter-spacing: 0.2em; border-bottom: 1px solid #e2e2e2; padding-bottom: 10px; margin-bottom: 20px;">Relação de Equipamentos</h3>
+        <div id="pdf-equipamentos" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </section>
+
+      <section id="pdf-obs-section">
+        <h3 style="font-size: 12px; font-weight: 800; color: #7d775f; text-transform: uppercase; letter-spacing: 0.2em; border-bottom: 1px solid #e2e2e2; padding-bottom: 10px; margin-bottom: 20px;">Observações</h3>
+        <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid #ffde03;">
+          <p id="pdf-obs" style="margin: 0; font-style: italic; font-size: 14px; line-height: 1.6; color: #4c4732;"></p>
+        </div>
+      </section>
+    </div>
+
+    <footer style="margin-top: 60px; padding-top: 20px; border-top: 1px solid #e2e2e2; text-align: center;">
+      <p style="font-size: 10px; font-weight: 800; color: #7d775f; text-transform: uppercase; letter-spacing: 0.2em; margin: 0;">&copy; 2026 SET LIST • PIXEL.CO</p>
+    </footer>
+  </div>
+</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

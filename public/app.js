@@ -56,9 +56,9 @@ function setupNavigation() {
 
     desktops.forEach(b => {
       if(b.dataset.view === view) {
-        b.className = 'nav-btn-desktop text-[#ffde03] transition-colors px-3 py-1 rounded-xl uppercase font-bold tracking-tighter';
+        b.className = 'nav-btn-desktop text-primary-container transition-colors px-3 py-1 rounded-xl uppercase font-bold tracking-tighter shadow-sm';
       } else {
-        b.className = 'nav-btn-desktop text-[#1a1c1c] hover:bg-zinc-200/50 transition-colors px-3 py-1 rounded-xl uppercase font-bold tracking-tighter';
+        b.className = 'nav-btn-desktop text-on-background hover:bg-surface-container-high transition-colors px-3 py-1 rounded-xl uppercase font-bold tracking-tighter';
       }
     });
 
@@ -779,6 +779,12 @@ window.openRegistroDetail = function(id) {
     shareRecord(r);
   };
 
+  // Botão Exportar PDF
+  const pdfBtn = document.getElementById('modal-reg-pdf');
+  pdfBtn.onclick = () => {
+    exportToPDF(r);
+  };
+
   // Botão Excluir
   const deleteBtn = document.getElementById('modal-reg-delete');
   deleteBtn.onclick = () => {
@@ -816,6 +822,94 @@ function copyToClipboard(text) {
   }).catch(() => {
     showToast('Erro ao copiar link', 'error');
   });
+}
+
+// ── Exportação PDF ────────────────────────────────────────────
+async function exportToPDF(record) {
+  const btn = document.getElementById('modal-reg-pdf');
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> GERANDO...';
+
+  try {
+    // 1. Preencher o template
+    document.getElementById('pdf-cliente').textContent = record.cliente;
+    document.getElementById('pdf-data-producao').textContent = formatDate(record.data);
+    document.getElementById('pdf-data-geracao').textContent = new Date().toLocaleDateString('pt-BR');
+    
+    const status = record.status || 'em-producao';
+    const statusEl = document.getElementById('pdf-status');
+    statusEl.textContent = statusLabel(status);
+    
+    // Cores do status no PDF
+    const colors = {
+      'pre-producao': { bg: '#e2e2e2', text: '#4c4732' },
+      'em-producao':  { bg: '#ffe24b', text: '#716200' },
+      'finalizado':   { bg: '#5df7ff', text: '#006d71' }
+    }[status] || { bg: '#ffe24b', text: '#716200' };
+    
+    statusEl.style.backgroundColor = colors.bg;
+    statusEl.style.color = colors.text;
+
+    // Equipe
+    document.getElementById('pdf-equipe').innerHTML = record.equipe.map(m => `
+      <div style="background: #f3f3f4; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #1a1c1c; border: 1px solid #e2e2e2;">
+        ${esc(m)}
+      </div>
+    `).join('');
+
+    // Equipamentos agrupados
+    const grouped = {};
+    record.equipamentos.forEach(eq => {
+      const cat = categorias.find(c => c.itens.includes(eq));
+      const key = cat ? cat.categoria : 'Outros';
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(eq);
+    });
+
+    document.getElementById('pdf-equipamentos').innerHTML = Object.entries(grouped).map(([cat, itens]) => `
+      <div style="margin-bottom: 15px;">
+        <h4 style="font-size: 10px; font-weight: 800; color: #7d775f; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">${esc(cat)}</h4>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          ${itens.map(eq => `
+            <div style="display: flex; align-items: center; gap: 8px; background: #fff; padding: 10px 15px; border-radius: 8px; border: 1px solid #eee;">
+              <span style="color: #ffde03; font-size: 16px;">●</span>
+              <span style="font-size: 13px; font-weight: 500;">${esc(eq)}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+
+    // Observações
+    const obsSection = document.getElementById('pdf-obs-section');
+    if (record.observacoes && record.observacoes.trim()) {
+      obsSection.style.display = 'block';
+      document.getElementById('pdf-obs').textContent = record.observacoes;
+    } else {
+      obsSection.style.display = 'none';
+    }
+
+    // 2. Gerar PDF
+    const element = document.getElementById('pdf-content');
+    const opt = {
+      margin:       10,
+      filename:     `SetList_${record.cliente.replace(/\s+/g, '_')}_${record.data}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    await html2pdf().set(opt).from(element).save();
+    showToast('PDF gerado com sucesso!');
+
+  } catch (err) {
+    console.error('Erro ao gerar PDF:', err);
+    showToast('Erro ao gerar PDF', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+  }
 }
 
 window.changeRegistroStatus = async function(id, newStatus) {
